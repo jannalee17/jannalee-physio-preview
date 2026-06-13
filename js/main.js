@@ -45,39 +45,57 @@
     });
   }
 
-  /* ---- Collapsible team bios (team page only) ---- */
-  /* Bios are hidden until the visitor clicks a team member's name, so the
-     page reads light. Progressive enhancement: with no JS, bios stay visible. */
-  if (document.body.classList.contains("page-team")) {
-    var cards = document.querySelectorAll(".team-card");
-    cards.forEach(function (card, i) {
-      var heading = card.querySelector("h3");
-      var paras = card.querySelectorAll("p");
-      if (!heading || !paras.length) return;
+  /* ---- Team bios open in a popup (team page) ---- */
+  /* Each card carries a hidden .member-bio-content. "Read Bio" copies that
+     person's name, credentials, bio, and booking link into one shared modal. */
+  var modal = document.getElementById("bioModal");
+  if (modal) {
+    var mName = document.getElementById("bioModalName");
+    var mCreds = document.getElementById("bioModalCreds");
+    var mBio = document.getElementById("bioModalBio");
+    var mBook = document.getElementById("bioModalBook");
+    var lastTrigger = null;
 
-      // Wrap the bio paragraph(s) in one collapsible container
-      var bio = document.createElement("div");
-      bio.className = "team-bio";
-      bio.id = "team-bio-" + i;
-      paras[0].parentNode.insertBefore(bio, paras[0]);
-      paras.forEach(function (p) { bio.appendChild(p); });
+    var openBio = function (card, trigger) {
+      var name = card.querySelector(".member-name");
+      var creds = card.querySelector(".member-creds");
+      var bio = card.querySelector(".member-bio-content");
+      var book = card.querySelector(".member-book");
+      mName.textContent = name ? name.textContent : "";
+      mCreds.textContent = creds ? creds.textContent : "";
+      mBio.innerHTML = bio ? bio.innerHTML : "";
+      if (book) {
+        mBook.href = book.getAttribute("href");
+        mBook.hidden = false;
+      } else {
+        mBook.hidden = true;
+      }
+      lastTrigger = trigger;
+      modal.hidden = false;
+      document.body.classList.add("modal-open");
+      var closeBtn = modal.querySelector(".bio-modal-close");
+      if (closeBtn) closeBtn.focus();
+    };
 
-      // Turn the name into the toggle
-      var name = heading.textContent;
-      var btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "bio-toggle";
-      btn.setAttribute("aria-expanded", "false");
-      btn.setAttribute("aria-controls", bio.id);
-      btn.innerHTML = '<span class="bio-toggle-name"></span><span class="bio-caret" aria-hidden="true"></span>';
-      btn.querySelector(".bio-toggle-name").textContent = name;
-      heading.textContent = "";
-      heading.appendChild(btn);
+    var closeBio = function () {
+      modal.hidden = true;
+      document.body.classList.remove("modal-open");
+      if (lastTrigger) { lastTrigger.focus(); lastTrigger = null; }
+    };
 
+    var readBtns = document.querySelectorAll(".member-readbio");
+    readBtns.forEach(function (btn) {
       btn.addEventListener("click", function () {
-        var open = bio.classList.toggle("open");
-        btn.setAttribute("aria-expanded", open ? "true" : "false");
+        var card = btn.closest(".member");
+        if (card) openBio(card, btn);
       });
+    });
+
+    modal.addEventListener("click", function (e) {
+      if (e.target.hasAttribute("data-close")) closeBio();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !modal.hidden) closeBio();
     });
   }
 })();

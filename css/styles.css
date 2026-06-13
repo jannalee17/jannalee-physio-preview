@@ -247,18 +247,32 @@ p { margin: 0 0 1rem; }
 .team-card .creds { font-size: .85rem; color: var(--muted); margin-top: .2rem; }
 .team-card p { color: var(--muted); font-size: .95rem; margin-top: .8rem; margin-bottom: 0; }
 
-/* Collapsible bios: the name is a toggle, bio is hidden until clicked (team page) */
-.bio-toggle { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; display: inline-flex; align-items: center; gap: .45rem; }
-.bio-toggle .bio-toggle-name { transition: color .15s ease; }
-.bio-toggle:hover .bio-toggle-name,
-.bio-toggle:focus-visible .bio-toggle-name { color: var(--teal-dark); text-decoration: underline; text-underline-offset: 3px; }
-.bio-toggle:focus { outline: none; }
-.bio-toggle:focus-visible { outline: 2px solid var(--teal-dark); outline-offset: 4px; border-radius: 4px; }
-.bio-caret { width: .42rem; height: .42rem; border-right: 2px solid var(--teal-dark); border-bottom: 2px solid var(--teal-dark); transform: rotate(45deg); transition: transform .2s ease; margin-top: -3px; opacity: .7; }
-.bio-toggle[aria-expanded="true"] .bio-caret { transform: rotate(-135deg); margin-top: 3px; }
-.team-bio { display: none; }
-.team-bio.open { display: block; animation: bioReveal .18s ease; }
-@keyframes bioReveal { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+/* ---------- Team member cards (Zone-style: text on top, photo filling the bottom) ---------- */
+.member { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; text-align: left; }
+.member-body { padding: 1.6rem 1.6rem 1.4rem; }
+.member-creds { font-size: .8rem; color: var(--muted); line-height: 1.45; }
+.member-name { font-size: 1.55rem; margin: .2rem 0 0; }
+.member-actions { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; margin-top: 1rem; }
+.member-book { border-radius: 999px; padding: .55rem 1.25rem; font-size: .92rem; }
+.member-readbio { background: none; border: 0; padding: .25rem 0; cursor: pointer; font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--teal-dark); text-decoration: underline; text-underline-offset: 3px; }
+.member-readbio:hover, .member-readbio:focus-visible { color: var(--navy, #364368); }
+.member-readbio:focus-visible { outline: 2px solid var(--teal-dark); outline-offset: 3px; border-radius: 4px; }
+.member-bio-content { display: none; }
+.member-photo { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; object-position: top center; display: block; margin-top: 1.4rem; }
+
+/* Bio popup */
+.bio-modal { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 1.25rem; }
+.bio-modal[hidden] { display: none; }
+.bio-modal-backdrop { position: absolute; inset: 0; background: rgba(20, 28, 48, .55); }
+.bio-modal-panel { position: relative; background: #fff; border-radius: var(--radius-lg); width: 100%; max-width: 560px; max-height: 85vh; overflow-y: auto; padding: 2.2rem 2rem; box-shadow: 0 24px 60px rgba(0, 0, 0, .3); animation: bioReveal .2s ease; }
+.bio-modal-close { position: absolute; top: .5rem; right: .9rem; background: none; border: 0; font-size: 2rem; line-height: 1; cursor: pointer; color: var(--muted); }
+.bio-modal-close:hover { color: var(--navy, #364368); }
+.bio-modal-creds { font-size: .85rem; color: var(--muted); }
+.bio-modal-name { font-size: 1.7rem; margin: .15rem 0 1.1rem; }
+.bio-modal-bio p { color: var(--ink, #3a4656); font-size: .98rem; margin: 0 0 .9rem; }
+.bio-modal .member-book { margin-top: .4rem; display: inline-block; }
+body.modal-open { overflow: hidden; }
+@keyframes bioReveal { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
 
 /* ---------- Trust / reassurance strip (SCPT-safe, replaces testimonials) ---------- */
 .assurance { display: grid; gap: 1.5rem; grid-template-columns: 1fr; align-items: center; }
