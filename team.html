@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/png" href="images/logo/favicon.png" />
-  <link rel="stylesheet" href="css/styles.css?v=2" />
+  <link rel="stylesheet" href="css/styles.css?v=3" />
 </head>
 <body class="page-team">
 
@@ -55,7 +55,7 @@
               <div class="member-creds">Owner · BMR PT · Certificate in Sports Physiotherapy · Shift Concussion · First Responder</div>
               <h3 class="member-name">Jannalee Edgar</h3>
               <div class="member-actions">
-                <a class="btn btn-primary member-book" href="https://jannaleephysio.janeapp.com/" target="_blank" rel="noopener">Book with Me</a>
+                <button type="button" class="btn btn-primary member-book">Book with Me</button>
                 <button type="button" class="member-readbio">Read Bio</button>
               </div>
               <div class="member-bio-content" hidden>
@@ -70,7 +70,7 @@
               <div class="member-creds">Registered Physiotherapist · Dry Needling · Myofascial Release</div>
               <h3 class="member-name">Ayusha Giri</h3>
               <div class="member-actions">
-                <a class="btn btn-primary member-book" href="https://jannaleephysio.janeapp.com/" target="_blank" rel="noopener">Book with Me</a>
+                <button type="button" class="btn btn-primary member-book">Book with Me</button>
                 <button type="button" class="member-readbio">Read Bio</button>
               </div>
               <div class="member-bio-content" hidden>
@@ -84,7 +84,7 @@
               <div class="member-creds">Bachelor of Physiotherapy · Vestibular &amp; Concussion Rehab</div>
               <h3 class="member-name">Darshil Kheni</h3>
               <div class="member-actions">
-                <a class="btn btn-primary member-book" href="https://jannaleephysio.janeapp.com/" target="_blank" rel="noopener">Book with Me</a>
+                <button type="button" class="btn btn-primary member-book">Book with Me</button>
                 <button type="button" class="member-readbio">Read Bio</button>
               </div>
               <div class="member-bio-content" hidden>
@@ -98,7 +98,7 @@
               <div class="member-creds">Bachelor of Physiotherapy · Manual Therapy</div>
               <h3 class="member-name">Nidhi Patel</h3>
               <div class="member-actions">
-                <a class="btn btn-primary member-book" href="https://jannaleephysio.janeapp.com/" target="_blank" rel="noopener">Book with Me</a>
+                <button type="button" class="btn btn-primary member-book">Book with Me</button>
                 <button type="button" class="member-readbio">Read Bio</button>
               </div>
               <div class="member-bio-content" hidden>
@@ -124,7 +124,7 @@
               <div class="member-creds">Bachelor of Kinesiology (Sport Performance)</div>
               <h3 class="member-name">Cambrie Gel</h3>
               <div class="member-actions">
-                <a class="btn btn-primary member-book" href="https://jannaleephysio.janeapp.com/" target="_blank" rel="noopener">Book with Me</a>
+                <button type="button" class="btn btn-primary member-book">Book with Me</button>
                 <button type="button" class="member-readbio">Read Bio</button>
               </div>
               <div class="member-bio-content" hidden>
@@ -138,7 +138,7 @@
               <div class="member-creds">Certified Coach · CSCS (in progress)</div>
               <h3 class="member-name">Sky Thompson</h3>
               <div class="member-actions">
-                <a class="btn btn-primary member-book" href="https://jannaleephysio.janeapp.com/" target="_blank" rel="noopener">Book with Me</a>
+                <button type="button" class="btn btn-primary member-book">Book with Me</button>
                 <button type="button" class="member-readbio">Read Bio</button>
               </div>
               <div class="member-bio-content" hidden>
@@ -210,7 +210,37 @@
         <div class="bio-modal-creds" id="bioModalCreds"></div>
         <h2 class="bio-modal-name" id="bioModalName"></h2>
         <div class="bio-modal-bio" id="bioModalBio"></div>
-        <a class="btn btn-primary member-book" id="bioModalBook" href="https://jannaleephysio.janeapp.com/" target="_blank" rel="noopener">Book with Me</a>
+        <button type="button" class="btn btn-primary member-book" id="bioModalBook">Book with Me</button>
+      </div>
+    </div>
+
+    <!-- Booking-request popup: collects name/phone/email and which physio, then notifies Karen -->
+    <div class="bio-modal" id="bookModal" role="dialog" aria-modal="true" aria-labelledby="bookModalTitle" hidden>
+      <div class="bio-modal-backdrop" data-close></div>
+      <div class="bio-modal-panel">
+        <button type="button" class="bio-modal-close" aria-label="Close" data-close>&times;</button>
+        <h2 class="bio-modal-name" id="bookModalTitle">Book with <span id="bookPhysioName"></span></h2>
+        <p class="book-intro">Leave your details and Karen will reach out to get you booked in. No referral needed.</p>
+        <div class="form-success" id="bookSuccess" role="status">
+          Thanks! Your request is in — Karen will be in touch soon to get you booked with <span id="bookSuccessName"></span>. (For anything urgent, please call us at 306-786-3300.)
+        </div>
+        <form id="bookForm" novalidate action="#" method="post">
+          <input type="hidden" name="physio" id="bookPhysioField" />
+          <div class="field">
+            <label for="bookName">Your name <span class="req">*</span></label>
+            <input type="text" id="bookName" name="name" autocomplete="name" required />
+          </div>
+          <div class="field">
+            <label for="bookPhone">Phone <span class="req">*</span></label>
+            <input type="tel" id="bookPhone" name="phone" autocomplete="tel" required />
+          </div>
+          <div class="field">
+            <label for="bookEmail">Email <span class="req">*</span></label>
+            <input type="email" id="bookEmail" name="email" autocomplete="email" required />
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;">Send request</button>
+          <p class="form-note">By sending this, you agree we can contact you about booking. This form isn't for medical emergencies — if it's urgent, please call us at 306-786-3300 or 911.</p>
+        </form>
       </div>
     </div>
   </main>
@@ -260,7 +290,7 @@
     </div>
   </footer>
 
-  <script src="js/main.js?v=2"></script>
+  <script src="js/main.js?v=3"></script>
   <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
 </body>
 </html>

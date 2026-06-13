@@ -45,57 +45,116 @@
     });
   }
 
-  /* ---- Team bios open in a popup (team page) ---- */
-  /* Each card carries a hidden .member-bio-content. "Read Bio" copies that
-     person's name, credentials, bio, and booking link into one shared modal. */
-  var modal = document.getElementById("bioModal");
-  if (modal) {
+  /* ---- Team bios + booking requests open in popups (team page) ---- */
+  /* "Read Bio" copies a card's hidden bio into #bioModal. "Book with Me"
+     opens #bookModal pre-set to that physio; submitting sends Karen a request. */
+  var bioModal = document.getElementById("bioModal");
+  var bookModal = document.getElementById("bookModal");
+  var lastTrigger = null;
+
+  function showModal(modalEl, focusEl) {
+    modalEl.hidden = false;
+    document.body.classList.add("modal-open");
+    if (focusEl) focusEl.focus();
+  }
+  function hideModal(modalEl) {
+    modalEl.hidden = true;
+    if ((!bioModal || bioModal.hidden) && (!bookModal || bookModal.hidden)) {
+      document.body.classList.remove("modal-open");
+    }
+  }
+  function closeAndRestore(modalEl) {
+    hideModal(modalEl);
+    if (lastTrigger) { lastTrigger.focus(); lastTrigger = null; }
+  }
+  function bindClose(modalEl) {
+    modalEl.addEventListener("click", function (e) {
+      if (e.target.hasAttribute("data-close")) closeAndRestore(modalEl);
+    });
+  }
+
+  /* Open the booking-request form, pre-set to a physio */
+  function openBook(physioName, trigger) {
+    if (!bookModal) return;
+    var field = document.getElementById("bookPhysioField");
+    var nameSpan = document.getElementById("bookPhysioName");
+    var form = document.getElementById("bookForm");
+    var success = document.getElementById("bookSuccess");
+    if (form) { form.reset(); form.hidden = false; }
+    if (success) success.classList.remove("show");
+    if (field) field.value = physioName || "";
+    if (nameSpan) nameSpan.textContent = physioName || "";
+    lastTrigger = trigger || lastTrigger;
+    showModal(bookModal, document.getElementById("bookName"));
+  }
+
+  /* Bio popup */
+  if (bioModal) {
     var mName = document.getElementById("bioModalName");
     var mCreds = document.getElementById("bioModalCreds");
     var mBio = document.getElementById("bioModalBio");
     var mBook = document.getElementById("bioModalBook");
-    var lastTrigger = null;
 
-    var openBio = function (card, trigger) {
-      var name = card.querySelector(".member-name");
-      var creds = card.querySelector(".member-creds");
-      var bio = card.querySelector(".member-bio-content");
-      var book = card.querySelector(".member-book");
-      mName.textContent = name ? name.textContent : "";
-      mCreds.textContent = creds ? creds.textContent : "";
-      mBio.innerHTML = bio ? bio.innerHTML : "";
-      if (book) {
-        mBook.href = book.getAttribute("href");
-        mBook.hidden = false;
-      } else {
-        mBook.hidden = true;
-      }
-      lastTrigger = trigger;
-      modal.hidden = false;
-      document.body.classList.add("modal-open");
-      var closeBtn = modal.querySelector(".bio-modal-close");
-      if (closeBtn) closeBtn.focus();
-    };
-
-    var closeBio = function () {
-      modal.hidden = true;
-      document.body.classList.remove("modal-open");
-      if (lastTrigger) { lastTrigger.focus(); lastTrigger = null; }
-    };
-
-    var readBtns = document.querySelectorAll(".member-readbio");
-    readBtns.forEach(function (btn) {
+    document.querySelectorAll(".member-readbio").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var card = btn.closest(".member");
-        if (card) openBio(card, btn);
+        if (!card) return;
+        var name = card.querySelector(".member-name");
+        var creds = card.querySelector(".member-creds");
+        var bio = card.querySelector(".member-bio-content");
+        mName.textContent = name ? name.textContent : "";
+        mCreds.textContent = creds ? creds.textContent : "";
+        mBio.innerHTML = bio ? bio.innerHTML : "";
+        mBook.hidden = !card.querySelector(".member-book");
+        lastTrigger = btn;
+        showModal(bioModal, bioModal.querySelector(".bio-modal-close"));
       });
     });
 
-    modal.addEventListener("click", function (e) {
-      if (e.target.hasAttribute("data-close")) closeBio();
-    });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && !modal.hidden) closeBio();
-    });
+    // From the bio popup, the Book button opens the booking form for that person
+    if (mBook) {
+      mBook.addEventListener("click", function () {
+        var name = mName.textContent;
+        hideModal(bioModal);
+        openBook(name, mBook);
+      });
+    }
+    bindClose(bioModal);
   }
+
+  /* Card "Book with Me" buttons (only the ones inside a .member card) */
+  document.querySelectorAll(".member .member-book").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var card = btn.closest(".member");
+      var name = card ? card.querySelector(".member-name") : null;
+      openBook(name ? name.textContent : "", btn);
+    });
+  });
+
+  /* Booking form submit + close */
+  if (bookModal) {
+    var bookForm = document.getElementById("bookForm");
+    var bookSuccess = document.getElementById("bookSuccess");
+    var bookSuccessName = document.getElementById("bookSuccessName");
+    var bookField = document.getElementById("bookPhysioField");
+    if (bookForm) {
+      bookForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!bookForm.checkValidity()) { bookForm.reportValidity(); return; }
+        /* TODO: POST to a form backend (Formspree / GHL webhook) so Karen gets
+           the request by email. Until that's wired, this confirms on screen only. */
+        if (bookSuccessName) bookSuccessName.textContent = bookField ? bookField.value : "";
+        bookForm.hidden = true;
+        if (bookSuccess) bookSuccess.classList.add("show");
+      });
+    }
+    bindClose(bookModal);
+  }
+
+  /* Esc closes whichever popup is open */
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    if (bookModal && !bookModal.hidden) closeAndRestore(bookModal);
+    else if (bioModal && !bioModal.hidden) closeAndRestore(bioModal);
+  });
 })();
