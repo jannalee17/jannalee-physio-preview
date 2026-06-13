@@ -247,6 +247,19 @@ p { margin: 0 0 1rem; }
 .team-card .creds { font-size: .85rem; color: var(--muted); margin-top: .2rem; }
 .team-card p { color: var(--muted); font-size: .95rem; margin-top: .8rem; margin-bottom: 0; }
 
+/* Collapsible bios: the name is a toggle, bio is hidden until clicked (team page) */
+.bio-toggle { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; display: inline-flex; align-items: center; gap: .45rem; }
+.bio-toggle .bio-toggle-name { transition: color .15s ease; }
+.bio-toggle:hover .bio-toggle-name,
+.bio-toggle:focus-visible .bio-toggle-name { color: var(--teal-dark); text-decoration: underline; text-underline-offset: 3px; }
+.bio-toggle:focus { outline: none; }
+.bio-toggle:focus-visible { outline: 2px solid var(--teal-dark); outline-offset: 4px; border-radius: 4px; }
+.bio-caret { width: .42rem; height: .42rem; border-right: 2px solid var(--teal-dark); border-bottom: 2px solid var(--teal-dark); transform: rotate(45deg); transition: transform .2s ease; margin-top: -3px; opacity: .7; }
+.bio-toggle[aria-expanded="true"] .bio-caret { transform: rotate(-135deg); margin-top: 3px; }
+.team-bio { display: none; }
+.team-bio.open { display: block; animation: bioReveal .18s ease; }
+@keyframes bioReveal { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
 /* ---------- Trust / reassurance strip (SCPT-safe, replaces testimonials) ---------- */
 .assurance { display: grid; gap: 1.5rem; grid-template-columns: 1fr; align-items: center; }
 @media (min-width: 880px) { .assurance { grid-template-columns: 320px 1fr; } }
