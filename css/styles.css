@@ -161,6 +161,18 @@ p { margin: 0 0 1rem; }
 .hero-note svg { color: var(--teal); flex: none; }
 @media (min-width: 900px) { .hero-grid { grid-template-columns: 1.05fr .95fr; } }
 
+/* Full-bleed hero (homepage) — background photo + dark overlay + centered text */
+.hero-full { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; isolation: isolate; }
+.hero-full__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: -2; }
+.hero-full__overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, .45); z-index: -1; }
+.hero-full__inner { display: flex; flex-direction: column; align-items: center; max-width: 880px; padding-block: clamp(4rem, 10vh, 7rem); }
+.hero-full__eyebrow { color: #fff; opacity: .9; }
+.hero-full__title { font-family: Georgia, "Times New Roman", serif; color: #fff; font-weight: 600; font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1.12; letter-spacing: -0.4px; text-shadow: 0 2px 18px rgba(0, 0, 0, .4); margin-bottom: 1rem; }
+.hero-full__lead { color: #fff; font-size: clamp(1.05rem, 2.4vw, 1.3rem); line-height: 1.6; max-width: 660px; margin: 0 auto 2rem; text-shadow: 0 1px 12px rgba(0, 0, 0, .35); }
+.hero-full__ctas { justify-content: center; }
+.hero-full__note { color: #fff; opacity: .95; }
+.hero-full__note svg { color: #fff; }
+
 /* ---------- Photo placeholders ---------- */
 .ph {
   display: grid; place-items: center; text-align: center;
@@ -172,6 +184,9 @@ p { margin: 0 0 1rem; }
 .ph--tall { min-height: 420px; }
 .ph--round { border-radius: 50%; aspect-ratio: 1; min-height: 0; }
 .ph--wide { min-height: 200px; }
+
+/* Real content photo (service/condition page asides, etc.) — fills its column, rounded */
+.media-photo { display: block; width: 100%; height: auto; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); object-fit: cover; }
 
 /* ---------- Trust bar ---------- */
 .trust-bar { background: var(--navy); color: #e7eef5; }
