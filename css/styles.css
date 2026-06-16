@@ -188,15 +188,6 @@ p { margin: 0 0 1rem; }
 /* Real content photo (service/condition page asides, etc.) — fills its column, rounded */
 .media-photo { display: block; width: 100%; height: auto; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); object-fit: cover; }
 
-/* Image + text feature row (alternating) */
-.media-row { display: grid; gap: clamp(1.5rem, 4vw, 3rem); align-items: center; }
-.media-row + .media-row { margin-top: clamp(2rem, 5vw, 3.5rem); }
-.media-row h3 { font-size: 1.5rem; }
-@media (min-width: 760px) {
-  .media-row { grid-template-columns: 1fr 1fr; }
-  .media-row--reverse .media-row__media { order: 2; }
-}
-
 /* ---------- Trust bar ---------- */
 .trust-bar { background: var(--navy); color: #e7eef5; }
 .trust-bar .container { display: grid; gap: 1rem; grid-template-columns: repeat(2, 1fr); padding-block: 1.8rem; }
